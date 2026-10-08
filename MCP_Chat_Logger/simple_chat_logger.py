@@ -5,7 +5,7 @@ import uuid
 import re
 from datetime import datetime
 from mcp.server.fastmcp import FastMCP
-import openai
+from openai import OpenAI
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
@@ -71,7 +71,7 @@ def analyze_conversation_with_openai(messages: List[Dict[str, Any]]) -> Dict[str
         }
     
     # Configure OpenAI
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     
     try:
         # Format conversation for analysis
@@ -130,7 +130,7 @@ Focus on:
 {prompt}"""
         
         # Generate response using OpenAI
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=os.getenv("OPENAI_MODEL", "gpt-4"),
             messages=[
                 {"role": "system", "content": "You are a technical assistant that analyzes programming conversations and extracts code changes. Always respond with valid JSON."},
